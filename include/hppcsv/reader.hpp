@@ -30,8 +30,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef CSV_H
-#define CSV_H
+#ifndef HPPCSV_READER_HPP
+#define HPPCSV_READER_HPP
 
 #include <vector>
 #include <string>
@@ -45,7 +45,7 @@
 #include <cerrno>
 #include <istream>
 
-#ifndef CSV_IO_NO_THREAD
+#ifdef HPPCSV_IO_THREAD
 
 #include <mutex>
 #include <thread>
@@ -59,7 +59,7 @@
 
 #endif
 
-namespace io
+namespace hppcsv
 {
 ////////////////////////////////////////////////////////////////////////////
 //                                 LineReader                             //
@@ -233,7 +233,7 @@ private:
     long long remaining_byte_count;
 };
 
-#ifndef CSV_IO_NO_THREAD
+#ifdef HPPCSV_IO_THREAD
 
 class AsynchronousReader
 {
@@ -383,7 +383,7 @@ class LineReader
 private:
     static const int block_len = 1 << 24;
     std::unique_ptr<char[]> buffer; // must be constructed before (and thus destructed after) the reader!
-#ifdef CSV_IO_NO_THREAD
+#ifndef HPPCSV_IO_THREAD
     detail::SynchronousReader reader;
 #else
     detail::AsynchronousReader reader;
@@ -1026,7 +1026,7 @@ void parse_line(
     {
         if (line == nullptr)
         {
-            throw ::io::error::too_few_columns();
+            throw ::hppcsv::error::too_few_columns();
         }
         char* col_begin, * col_end;
         chop_next_column<quote_policy>(line, col_begin, col_end);
@@ -1041,7 +1041,7 @@ void parse_line(
     }
     if (line != nullptr)
     {
-        throw ::io::error::too_many_columns();
+        throw ::hppcsv::error::too_many_columns();
     }
 }
 
@@ -1081,7 +1081,7 @@ void parse_header_line(
             }
         if (col_begin)
         {
-            if (ignore_policy & ::io::ignore_extra_column)
+            if (ignore_policy & ::hppcsv::ignore_extra_column)
             {
                 col_order.push_back(-1);
             }
@@ -1093,7 +1093,7 @@ void parse_header_line(
             }
         }
     }
-    if (!(ignore_policy & ::io::ignore_missing_column))
+    if (!(ignore_policy & ::hppcsv::ignore_missing_column))
     {
         for (unsigned i = 0; i < column_count; ++i)
         {
@@ -1492,7 +1492,7 @@ private:
             {
                 try
                 {
-                    ::io::detail::parse<overflow_policy>(row[r], t);
+                    ::hppcsv::detail::parse<overflow_policy>(row[r], t);
                 }
                 catch (error::with_column_content& err)
                 {
