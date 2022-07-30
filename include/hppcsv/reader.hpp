@@ -1165,23 +1165,23 @@ void parse_unsigned_integer(const char* col, T& x)
 }
 
 template<typename overflow_policy>
-void parse(char* col, unsigned char x)
+void parse(char* col, unsigned char& x)
 { parse_unsigned_integer<overflow_policy>(col, x); }
 
 template<typename overflow_policy>
-void parse(char* col, unsigned short x)
+void parse(char* col, unsigned short& x)
 { parse_unsigned_integer<overflow_policy>(col, x); }
 
 template<typename overflow_policy>
-void parse(char* col, unsigned int x)
+void parse(char* col, unsigned int& x)
 { parse_unsigned_integer<overflow_policy>(col, x); }
 
 template<typename overflow_policy>
-void parse(char* col, unsigned long x)
+void parse(char* col, unsigned long& x)
 { parse_unsigned_integer<overflow_policy>(col, x); }
 
 template<typename overflow_policy>
-void parse(char* col, unsigned long long x)
+void parse(char* col, unsigned long long& x)
 { parse_unsigned_integer<overflow_policy>(col, x); }
 
 template<typename overflow_policy, typename T>
